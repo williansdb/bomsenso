@@ -28,15 +28,15 @@ Em uma abordagem de autoanálise, o *framework* correlaciona artefatos e informa
 
 ## 🏗️ Arquitetura e Pilares Técnicos
 
-O projeto sustenta-se em 5 pilares fundamentais:
+O projeto sustenta-se em 6 pilares fundamentais:
 
-1. **Roteamento Adaptativo e Contexto Dinâmico (FinOps):** Detecção física de VRAM *in-memory*, alocação dinâmica de LLMs e escalonamento automático da janela de memória (`num_ctx`). A topologia adapta-se desde abordagens de sobrevivência Single-LLM (4 GB) até expansões verticais em hardwares corporativos de alta performance.
+1. **Roteamento Adaptativo e Contexto Dinâmico (FinOps):** Detecção física de VRAM *in-memory* em GPUs NVIDIA, alocação dinâmica de LLMs e escalonamento automático da janela de memória (`num_ctx`). A topologia adapta-se desde abordagens de sobrevivência Single-LLM (4 GB) até expansões verticais em hardwares corporativos de alta performance.
 2. **Inventário de Metadados (BOM):** Geração estática de *Bill of Materials* utilizando o padrão **CycloneDX** para uma taxonomia clara e estruturada das dependências.
 3. **Auditoria de Vulnerabilidades (VDR):** Varredura local via `dep-scan`, gerando evidências (CVEs) em ambiente contêinerizado.
 4. **Indexação Semântica (LazyGraphRAG):** Construção de um Grafo de Conhecimento em memória (via `networkx`) para navegação inteligente dos agentes nas dependências diretas e transitivas.
 5. **Orquestração *Zero Trust* com *Artifact-Mediated Handoff* (LangGraph):** Deliberação agêntica estruturada com Segregação de Funções (SoD) e persistência em disco. O estado do grafo trafega apenas referências de arquivos, a orquestração conta com módulo interativo *Human-in-the-Loop* (HiTL) para *enforcement* de políticas e divide-se em:
    - 🕵️ **Cadeia de Decisão:** Analista (Extração e Síntese Técnica) e Supervisor/CISO (Veredito Base, deliberação de risco e bloqueio por omissão de *compliance*).
-   - ⚖️ **🛡️ Assurance Independente:** Auditor Interno (Validação de evidências e desafio técnico). Opera fora da cadeia de subordinação primária para gerar atestação imparcial.
+   - ⚖️ **Assurance Independente:** Auditor Interno (Validação de evidências e desafio técnico). Opera fora da cadeia de subordinação primária para gerar atestação imparcial.
 6. **Atestação Pós-Quântica (PQC):** Motor criptográfico alinhado ao modelo *Zero Trust*, equipado com `liboqs` por meio de bindings em Python para assinar e validar envelopes de metadados utilizando **ML-DSA (FIPS 204)**, derivado do projeto *CRYSTALS-Dilithium*, além de suportar encapsulamento de chaves com **ML-KEM (FIPS 203)**, derivado do projeto *CRYSTALS-Kyber*.
 ---
 
@@ -53,8 +53,16 @@ O fluxo operacional deste *runbook* é orquestrado de forma encadeada nas seguin
 - **CÉLULA 7:** Orquestração Agêntica *Zero Trust (LangGraph, Artifact-Mediated Handoff, módulo HiTL punitivo e geração do pacote ZIP).*
 - **CÉLULA 8:** Verificação Criptográfica Pós-Quântica *(Validação de integridade das evidências via perfis FIPS 204 da liboqs).*
 
+A arquitetura operacional do **BOMSenso** e o relacionamento entre seus principais componentes são apresentados na Figura 1.
+
+<p align="center">
+  <img src="bomsenso.png" alt="Arquitetura operacional do BOMSenso" width="900">
+<p align="center">
+  <strong>Figura 1 — Arquitetura operacional do BOMSenso.</strong>
+</p>
+
 ---
-## 🚀 Matriz de Roteamento - Absolute Resolve
+## 🚀 Matriz de Roteamento - *Absolute Resolve*
 
 O sistema classifica o perfil de *hardware* conforme a capacidade de VRAM disponível, abrangendo desde ambientes de entrada (4 GB) até infraestruturas massivas (≥ 300 GB). A orquestração *Zero Trust* é imutável e operada estritamente por 3 agentes (Analista, Supervisor e Auditor Interno).
 
@@ -97,4 +105,10 @@ O ambiente é 100% orquestrado via **Docker Compose**, provendo isolamento lógi
 2. **ollama/ollama:0.33.2** → `bomsenso_ollama` (Contêiner)
 
 ---
-*Projeto orquestrado por williansdb. Acesse o repositório em [github.com/williansdb/bomsenso](https://github.com/williansdb/bomsenso).*
+## Repositório
+
+Para clonar o projeto:
+
+```bash
+git clone https://github.com/williansdb/bomsenso.git
+cd bomsenso
