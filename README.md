@@ -20,7 +20,9 @@
 
 
 
-O BOMSenso combina os conceitos de *Bill of Materials* (BOM) e Senso (do latim *sensus*, associado à percepção e ao entendimento), refletindo sua proposta de atuar como um motor orientado à interpretação de artefatos BOM. Em uma abordagem de autoanálise, o sistema correlaciona artefatos e vulnerabilidades para produzir evidências e apoiar a tomada de decisão. Desenvolvido com modelos *open-weights* e operação *on-premise*, o processamento ocorre localmente, mantendo os dados restritos ao ambiente de execução e preservando a rastreabilidade operacional de ponta a ponta.
+O BOMSenso é um *framework open-source* de orquestração para geração e análise integrada de inventários de composição, utilizando o OWASP *CycloneDX Generator* (cdxgen) como mecanismo de geração dos artefatos. Seu nome combina os conceitos de *Bill of Materials* (BOM) e Senso, derivado do latim *sensus*, associado à percepção e ao entendimento, refletindo sua proposta de atuar como um motor orientado à interpretação de artefatos BOM.
+
+Em uma abordagem de autoanálise, o *framework* correlaciona artefatos e informações de vulnerabilidades para produzir evidências estruturadas e apoiar a tomada de decisão. Desenvolvido para operar com modelos *open-weights* em ambientes *on-premise*, o processamento ocorre localmente, mantendo os dados restritos ao ambiente de execução, reforçando a soberania de dados e preservando a rastreabilidade operacional de ponta a ponta.
 
 ---
 
@@ -28,44 +30,56 @@ O BOMSenso combina os conceitos de *Bill of Materials* (BOM) e Senso (do latim *
 
 O projeto sustenta-se em 5 pilares fundamentais:
 
-1. **Roteamento Adaptativo (FinOps):** Detecção física de VRAM in-memory e alocação dinâmica de LLMs (desde abordagens de sobrevivência Single-LLM até a expansão horizontal de Conselhos Globais em hardwares Ultra-scale).
-2. **Inventário de Metadados (BOM):** Geração estática da *Software Bill of Materials* utilizando o padrão **OWASP CycloneDX**, criando uma taxonomia clara e estruturada das dependências.
-3. **Auditoria de Vulnerabilidades (VDR):** Varredura local via `dep-scan`, gerando evidências (CVEs) em ambiente totalmente isolado.
+1. **Roteamento Adaptativo e Contexto Dinâmico (FinOps):** Detecção física de VRAM *in-memory*, alocação dinâmica de LLMs e escalonamento automático da janela de memória (`num_ctx`). A topologia adapta-se desde abordagens de sobrevivência Single-LLM (4 GB) até expansões verticais em hardwares corporativos de alta performance.
+2. **Inventário de Metadados (BOM):** Geração estática de *Bill of Materials* utilizando o padrão **CycloneDX** para uma taxonomia clara e estruturada das dependências.
+3. **Auditoria de Vulnerabilidades (VDR):** Varredura local via `dep-scan`, gerando evidências (CVEs) em ambiente contêinerizado.
 4. **Indexação Semântica (LazyGraphRAG):** Construção de um Grafo de Conhecimento em memória (via `networkx`) para navegação inteligente dos agentes nas dependências diretas e transitivas.
-5. **Orquestração *Zero Trust* (LangGraph):** Deliberação agêntica orientada por criticidade e Segregação de Funções (SoD). A topologia escala de 3 a 8 agentes conforme a política de risco, dividindo o atrito cognitivo em duas frentes:
-   - 🕵️ **🏢 Cadeia de Decisão:** Estagiário (Triagem), Analista (Mapeamento Técnico), Supervisor (Veredito Base), Gerente (Visão Cross-Setorial), Diretor (Impacto Financeiro) e Presidente (Autorização de Shutdown).
-   - ⚖️ **🛡️ Assurance Independente:** Auditor Interno (aderência técnica e evidências) e Auditor Externo (conformidade regulatória e ISO). Operam fora da cadeia de subordinação para garantir validação imparcial.
+5. **Orquestração *Zero Trust* com *Artifact-Mediated Handoff* (LangGraph):** Deliberação agêntica estruturada com Segregação de Funções (SoD) e persistência em disco. O estado do grafo trafega apenas referências de arquivos, a orquestração conta com módulo interativo *Human-in-the-Loop* (HiTL) para *enforcement* de políticas e divide-se em:
+   - 🕵️ **Cadeia de Decisão:** Analista (Extração e Síntese Técnica) e Supervisor/CISO (Veredito Base, deliberação de risco e bloqueio por omissão de *compliance*).
+   - ⚖️ **🛡️ Assurance Independente:** Auditor Interno (Validação de evidências e desafio técnico). Opera fora da cadeia de subordinação primária para gerar atestação imparcial.
 6. **Atestação Pós-Quântica (PQC):** Motor criptográfico alinhado ao modelo *Zero Trust*, equipado com `liboqs` por meio de bindings em Python para assinar e validar envelopes de metadados utilizando **ML-DSA (FIPS 204)**, derivado do projeto *CRYSTALS-Dilithium*, além de suportar encapsulamento de chaves com **ML-KEM (FIPS 203)**, derivado do projeto *CRYSTALS-Kyber*.
 ---
 
-## 🧬 Estrutura do Pipeline (As 7 Células)
+## 🧬 Estrutura do *Pipeline* (As 8 Células)
 
-O fluxo operacional do unbook é orquestrado de forma encadeada nas seguintes etapas:
+O fluxo operacional deste *runbook* é orquestrado de forma encadeada nas seguintes etapas:
 
-- **(i) CÉLULA 1:** Motor BOMSenso - Roteamento Adaptativo de VRAM *(Detecção de hardware e matriz automotiva).*
-- **(ii) CÉLULA 2:** Provisionamento Unificado via API REST *(Cache e download em endpoints Ollama e Hugging Face).*
-- **(iii) CÉLULA 3:** Inventários Estáticos *(Extração das 6 camadas e federação com UUID Mestre via CycloneDX).*
-- **(iv) CÉLULA 4:** Pre-Cache do VDB *(Download do contêiner de Threat Intelligence - CVEs).*
-- **(v) CÉLULA 5:** Auditoria de Vulnerabilidades e Atestação *(Execução do OWASP dep-scan no lago de metadados).*
-- **(vi) CÉLULA 6:** Motor LazyGraphRAG Oficial *(Ingestão de componentes e vulnerabilidades VDR).*
-- **(vii) CÉLULA 7:** Orquestração Agêntica Zero Trust *(LangGraph + RAG com dimensionamento de contexto adaptativo).*
+- **CÉLULA 1:** Motor BOMSenso - Roteamento Adaptativo de VRAM *(Detecção de hardware e matriz de roteamento).*
+- **CÉLULA 2:** Provisionamento Unificado via API REST *(Cache e download em endpoints Ollama e Hugging Face).*
+- **CÉLULA 3:** Inventários Estáticos *(Extração das 6 camadas e federação com UUID Mestre via CycloneDX).*
+- **CÉLULA 4:** Pre-Cache do VDB *(Download do contêiner de Threat Intelligence - CVEs).*
+- **CÉLULA 5:** Auditoria de Vulnerabilidades e Atestação *(Execução do OWASP dep-scan no lago de metadados).*
+- **CÉLULA 6:** Motor LazyGraphRAG Oficial *(Ingestão semântica de componentes e vulnerabilidades VDR).*
+- **CÉLULA 7:** Orquestração Agêntica *Zero Trust (LangGraph, Artifact-Mediated Handoff, módulo HiTL punitivo e geração do pacote ZIP).*
+- **CÉLULA 8:** Verificação Criptográfica Pós-Quântica *(Validação de integridade das evidências via perfis FIPS 204 da liboqs).*
 
 ---
 ## 🚀 Matriz de Roteamento - Absolute Resolve
 
-O sistema classifica o perfil de *hardware* conforme a capacidade de VRAM disponível, abrangendo a partir de 4 GB e escalando para mais de 300 GB, e ajusta a orquestração de abordagens ágeis com modelos SLM (*Ollama*) até estruturas simuladas com múltiplos LLMs de maior escala em paralelo (*Hugging Face/Ollama*). 
+O sistema classifica o perfil de *hardware* conforme a capacidade de VRAM disponível, abrangendo desde ambientes de entrada (4 GB) até infraestruturas massivas (≥ 300 GB). A orquestração *Zero Trust* é imutável e operada estritamente por 3 agentes (Analista, Supervisor e Auditor Interno).
 
-> **Atenção à Governança:** O aumento de VRAM não concede maior autoridade a um agente. Ele apenas permite a ativação de papéis especializados adicionais (como diretores e auditores externos) quando a política de risco corporativo exigir.
+> **Atenção à Governança:** O aumento de VRAM não concede maior autoridade à cadeia de decisão. Em vez disso, ele amplia a capacidade cognitiva da tríade ativa, permitindo a alocação de LLMs mais robustos e janelas de contexto estendidas para a leitura de artefatos complexos.
 
-| VRAM Efetiva | Camada Operacional *(Perfis de Hardware)* | Total de Agentes | Cadeia de Decisão | Assurance (Zero Trust) |
-| :--- | :--- | :--- | :--- | :--- |
-| **4–24 GB** | **Operacional Base**<br>*(Fusca, Golf, Corolla, Camaro, Mustang, 911)* | **3** | Analista ➔ Supervisor | Auditor Interno |
-| **32–64 GB** | **Tático I**<br>*(Gallardo, Centenario, M3 GTR, Chiron)* | **4** | ↳ *Adiciona:* **Estagiário** | Auditor Interno |
-| **80–96 GB** | **Tático II**<br>*(Airbus A380, Tupolev Tu-144)* | **5** | ↳ *Adiciona:* **Gerente** | Auditor Interno |
-| **141 GB** | **Compliance / Estratégico**<br>*(Antonov An-225 Mriya)* | **6** | *(Mantém Gerente como teto)* | ↳ *Adiciona:* **Auditor Externo** |
-| **180 GB** | **C-Level**<br>*(F-39E Gripen)* | **7** | ↳ *Adiciona:* **Diretor** | Aud. Interno & Externo |
-| **192–288 GB** | **Alta Presidência**<br>*(Su-57 Felon, F-22 Raptor)* | **8** | ↳ *Adiciona:* **Presidente** | Aud. Interno & Externo |
-| **≥ 300 GB** | **Conselho Global**<br>*(Absolute Resolve)* | **Frota** | **Múltiplos** Diretores e Presidentes | Aud. Interno & Externo |
+| VRAM Efetiva | Perfil de Hardware | Limite de Contexto |
+| :--- | :--- | :--- |
+| **4–6 GB** | 🪲 Fusca | 4K |
+| **8 GB** | 🚙 Golf GTi | 8K |
+| **12 GB** | 🚘 Corolla Altis | 12K |
+| **16 GB** | 🛞 Camaro SS | 16K |
+| **20 GB** | 🐎 Mustang GT | 20K |
+| **24 GB** | 🏁 911 GT3 RS | 24K |
+| **32 GB** | 🐂 Gallardo | 32K |
+| **40 GB** | 💎 Centenario | 40K |
+| **48 GB** | 🚓 M3 GTR | 48K |
+| **64 GB** | 🏎️ Chiron | 64K |
+| **80 GB** | ✈️ Airbus A380 | 80K |
+| **96 GB** | 🛫 Tupolev Tu-144 | 96K |
+| **141 GB** | 🛬 Antonov An-225 Mriya | 131K |
+| **180 GB** | 🛩️ F-39E Gripen | 163K |
+| **192 GB** | 🦇 Su-57 Felon | 196K |
+| **288 GB** | 🦅 F-22 Raptor | 262K |
+| **≥ 300 GB** | 🌎 Absolute Resolve | 256K+ |
+
 ---
 ### Critério de classificação de SLM
 
