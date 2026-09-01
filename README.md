@@ -18,11 +18,16 @@
 [![IBM Granite](https://img.shields.io/badge/IBM-Granite[4.2]-052FAD?logo=ibm&logoColor=white)](https://huggingface.co/collections/ibm-granite/granite-42-language-models)
 [![OpenAI GPT-OSS](https://img.shields.io/badge/OpenAI-GPT--OSS-412991?logo=openai&logoColor=white)](https://huggingface.co/openai)
 
-
-
 O BOMSenso é um *framework open-source* de orquestração para geração e análise integrada de inventários de composição, utilizando o OWASP *CycloneDX Generator* (cdxgen) como mecanismo de geração dos artefatos. Seu nome combina os conceitos de *Bill of Materials* (BOM) e Senso, derivado do latim *sensus*, associado à percepção e ao entendimento, refletindo sua proposta de atuar como um motor orientado à interpretação de artefatos BOM.
 
 Em uma abordagem de autoanálise, o *framework* correlaciona artefatos e informações de vulnerabilidades para produzir evidências estruturadas e apoiar a tomada de decisão. Desenvolvido para operar com modelos *open-weights* em ambientes *on-premise*, o processamento ocorre localmente, mantendo os dados restritos ao ambiente de execução, reforçando a soberania de dados e preservando a rastreabilidade operacional de ponta a ponta.
+
+## 🎯 Escopo e Natureza Experimental (PoC)
+
+O **BOMSenso v1.0.0** é estruturado como uma **Prova de Conceito (PoC) experimental**, e não como uma plataforma corporativa completa de governança de IA. Seu objetivo primário é demonstrar, de forma reproduzível em ambientes locais, como artefatos técnicos de segurança podem ser produzidos, correlacionados, avaliados por **agentes especializados** e posteriormente atestados.
+
+* **Cenário de Referência:** No *runbook* utilizado para validação estrutural do sistema, foram mapeadas **272 vulnerabilidades** contempladas no conjunto analisado.
+* **Evidências e Atestação:** O diretório `/assets` deste repositório armazena os diagramas de arquitetura, os envelopes criptográficos pós-quânticos (gerados no fluxo regular de atestação) e os artefatos de simulação de bypass da etapa de auditoria (como o pacote sem assinatura `relatorios_v100_sem_auditoria.zip`).
 
 ---
 
@@ -34,10 +39,10 @@ O projeto sustenta-se em 6 pilares fundamentais:
 2. **Inventário de Metadados (BOM):** Geração estática de *Bill of Materials* utilizando o padrão **CycloneDX** para uma taxonomia clara e estruturada das dependências.
 3. **Auditoria de Vulnerabilidades (VDR):** Varredura local via `dep-scan`, gerando evidências (CVEs) em ambiente contêinerizado.
 4. **Indexação Semântica (LazyGraphRAG):** Construção de um Grafo de Conhecimento em memória (via `networkx`) para navegação inteligente dos agentes nas dependências diretas e transitivas.
-5. **Orquestração *Zero Trust* com *Artifact-Mediated Handoff* (LangGraph):** Deliberação agêntica estruturada com Segregação de Funções (SoD) e persistência em disco. O estado do grafo trafega apenas referências de arquivos, a orquestração conta com módulo interativo *Human-in-the-Loop* (HiTL) para *enforcement* de políticas e divide-se em:
-   - 🕵️ **Cadeia de Decisão:** Analista (Extração e Síntese Técnica) e Supervisor/CISO (Veredito Base, deliberação de risco e bloqueio por omissão de *compliance*).
-   - ⚖️ **Assurance Independente:** Auditor Interno (Validação de evidências e desafio técnico). Opera fora da cadeia de subordinação primária para gerar atestação imparcial.
-6. **Atestação Pós-Quântica (PQC):** Motor criptográfico alinhado ao modelo *Zero Trust*, equipado com `liboqs` por meio de bindings em Python para assinar e validar envelopes de metadados utilizando **ML-DSA (FIPS 204)**, derivado do projeto *CRYSTALS-Dilithium*, além de suportar encapsulamento de chaves com **ML-KEM (FIPS 203)**, derivado do projeto *CRYSTALS-Kyber*.
+5. **Orquestração *Zero Trust* com *Artifact-Mediated Handoff* (LangGraph):** Deliberação agêntica com Segregação de Funções (SoD) e persistência em disco. O estado do grafo trafega apenas referências de arquivos, a orquestração conta com módulo interativo *Human-in-the-Loop* (HiTL) para *enforcement* de políticas e divide-se em:
+   - 🕵️ **Cadeia de Decisão:** `Analista` (Extração e Síntese Técnica) e `Supervisor/CISO` (Veredito Base, deliberação de risco e bloqueio por omissão de *compliance*).
+   - ⚖️ **Assurance Independente:** `Auditor Interno` (Validação de evidências e desafio técnico). Opera fora da cadeia de subordinação primária para gerar atestação imparcial.
+6. **Atestação Pós-Quântica (PQC):** Motor criptográfico alinhado ao modelo *Zero Trust*, equipado com `liboqs` por meio de *bindings* em Python para assinar e validar envelopes de metadados utilizando **ML-DSA (FIPS 204)**, derivado do projeto *CRYSTALS-Dilithium*, além de suportar encapsulamento de chaves com **ML-KEM (FIPS 203)**, derivado do projeto *CRYSTALS-Kyber*.
 ---
 
 ## 🧬 Estrutura do *Pipeline* (As 8 Células)
