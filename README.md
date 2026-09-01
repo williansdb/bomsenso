@@ -50,8 +50,8 @@ O fluxo operacional deste *runbook* é orquestrado de forma encadeada nas seguin
 - **CÉLULA 4:** Pre-Cache do VDB *(Download do contêiner de Threat Intelligence - CVEs).*
 - **CÉLULA 5:** Auditoria de Vulnerabilidades e Atestação *(Execução do OWASP dep-scan no lago de metadados).*
 - **CÉLULA 6:** Motor LazyGraphRAG Oficial *(Ingestão semântica de componentes e vulnerabilidades VDR).*
-- **CÉLULA 7:** Orquestração Agêntica *Zero Trust (LangGraph, Artifact-Mediated Handoff, módulo HiTL punitivo e geração do pacote ZIP).*
-- **CÉLULA 8:** Verificação Criptográfica Pós-Quântica *(Validação de integridade das evidências via perfis FIPS 204 da liboqs).*
+- **CÉLULA 7:** Orquestração Agêntica *Zero Trust (LangGraph, Artifact-Mediated Handoff, módulo Human in The Loop (HiTL) e geração do pacote ZIP).*
+- **CÉLULA 8:** Verificação Criptográfica Pós-Quântica *(Validação de integridade das evidências via perfis FIPS 204 da liboqs gerados pelo BOMSenso).*
 
 A arquitetura operacional do **BOMSenso** e o relacionamento entre seus principais componentes são apresentados na Figura 1.
 
@@ -64,7 +64,7 @@ A arquitetura operacional do **BOMSenso** e o relacionamento entre seus principa
 ---
 ## 🚀 Matriz de Roteamento - *Absolute Resolve*
 
-O sistema classifica o perfil de *hardware* conforme a capacidade de VRAM disponível, abrangendo desde ambientes de entrada (4 GB) até infraestruturas massivas (≥ 300 GB). A orquestração *Zero Trust* é imutável e operada estritamente por 3 agentes (Analista, Supervisor e Auditor Interno).
+O sistema classifica o perfil de *hardware* conforme a capacidade de VRAM disponível, abrangendo desde ambientes de entrada (4 GB) até infraestruturas massivas (≥ 300 GB). A orquestração *Zero Trust* é operada estritamente por 3 agentes (Analista, Supervisor e Auditor Interno).
 
 > **Atenção à Governança:** O aumento de VRAM não concede maior autoridade à cadeia de decisão. Em vez disso, ele amplia a capacidade cognitiva da tríade ativa, permitindo a alocação de LLMs mais robustos e janelas de contexto estendidas para a leitura de artefatos complexos.
 
