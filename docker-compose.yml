@@ -1,0 +1,46 @@
+ # docker-compose.yml
+services:
+  # 1. O Servidor de Inferência Air-Gapped
+  ollama:
+    image: ollama/ollama:0.33.2
+    container_name: bomsenso_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # 2. O Ambiente de Orquestração (Colab Local)
+  jupyter:
+    image: bomsenso-jupyter:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    container_name: bomsenso_jupyter
+    working_dir: /home/jovyan/work
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+    deploy:
+      resources:
+        limits:
+          # Fallback: Se não houver arquivo .env, usa 8 CPUs e 8GB de RAM
+          cpus: "${BOMSENSO_CPU_LIMIT:-8}"
+          memory: "${BOMSENSO_RAM_LIMIT:-8G}"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  ollama_data:

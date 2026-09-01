@@ -1,0 +1,139 @@
+# Dockerfile.jupyter
+FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
+
+# ============================================================
+# 1. Dependências do sistema e compilação
+# ============================================================
+
+USER root
+
+RUN apt-get update -qq && \
+    apt-get install -y -qq \
+        zstd \
+        pciutils \
+        lshw \
+        openjdk-21-jre-headless \
+        cmake \
+        ninja-build \
+        build-essential \
+        git \
+        libssl-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ============================================================
+# 2. Node.js + cdxgen
+# ============================================================
+
+RUN conda install -y -c conda-forge nodejs=22 && \
+    npm install -g @cdxgen/cdxgen@13.0.1
+
+
+# ============================================================
+# 3. Usuário Jupyter
+# ============================================================
+
+USER $NB_UID
+
+
+# ============================================================
+# 4. PyTorch CUDA 12.1
+# ============================================================
+
+RUN pip install --no-cache-dir \
+    --upgrade \
+    torch \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cu121
+
+
+# ============================================================
+# 5. Bibliotecas Python
+# ============================================================
+
+RUN pip install --no-cache-dir \
+    langchain==1.3.13 \
+    langgraph==1.2.9 \
+    langchain-ollama==1.1.0 \
+    transformers==5.13.1 \
+    owasp-depscan==6.3.0 \
+    langchain-core==1.4.9 \
+    langchain-huggingface==1.2.2 \
+    huggingface_hub==1.23.0 \
+    pipdeptree==4.2.1 \
+    accelerate==1.14.0 \
+    triton==3.6.0 \
+    pandas==3.0.5 \
+    networkx==3.3
+
+
+# ============================================================
+# 6. liboqs 0.16.0 — Open Quantum Safe
+# ============================================================
+
+USER root
+
+WORKDIR /tmp
+
+RUN git clone \
+        --depth 1 \
+        --branch 0.16.0 \
+        https://github.com/open-quantum-safe/liboqs.git \
+        liboqs && \
+    cmake \
+        -S liboqs \
+        -B liboqs/build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DBUILD_SHARED_LIBS=ON \
+        -DOQS_BUILD_ONLY_LIB=ON && \
+    cmake --build liboqs/build --parallel "$(nproc)" && \
+    cmake --install liboqs/build && \
+    ldconfig && \
+    rm -rf /tmp/liboqs
+
+# ============================================================
+# 7. liboqs-python 0.16.0
+# ============================================================
+
+USER $NB_UID
+
+RUN pip install --no-cache-dir \
+    liboqs-python==0.16.0
+
+
+# ============================================================
+# 8. Validação da liboqs / PQC
+# ============================================================
+
+RUN python -c "\
+import oqs; \
+\
+print('liboqs-python: import OK'); \
+\
+sig = oqs.get_enabled_sig_mechanisms(); \
+kem = oqs.get_enabled_kem_mechanisms(); \
+\
+print(''); \
+print('=== Signature mechanisms ==='); \
+print('Total:', len(sig)); \
+print('ML-DSA-44:', 'ML-DSA-44' in sig); \
+print('ML-DSA-65:', 'ML-DSA-65' in sig); \
+print('ML-DSA-87:', 'ML-DSA-87' in sig); \
+\
+print(''); \
+print('=== KEM mechanisms ==='); \
+print('Total:', len(kem)); \
+print('ML-KEM-512:', 'ML-KEM-512' in kem); \
+print('ML-KEM-768:', 'ML-KEM-768' in kem); \
+print('ML-KEM-1024:', 'ML-KEM-1024' in kem); \
+\
+print(''); \
+print('=== Complete signature catalog ==='); \
+print('\\n'.join(sig)); \
+\
+print(''); \
+print('=== Complete KEM catalog ==='); \
+print('\\n'.join(kem))"
