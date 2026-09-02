@@ -8,11 +8,12 @@
 [![LangGraph](https://img.shields.io/badge/LangGraph-1.2.9-white?logo=langchain&logoColor=green)](https://github.com/langchain-ai/langgraph/releases/tag/1.2.9)
 [![LibOQS (Post-Quantum)](https://img.shields.io/badge/LibOQS_PQC-0.16.0-4B0082?logo=c&logoColor=white)](https://github.com/open-quantum-safe/liboqs/releases/tag/0.16.0)
 [![LazyGraphRAG](https://img.shields.io/badge/Feature-LazyGraphRAG-8A2BE2)](#)
-[![Ollama](https://img.shields.io/badge/Ollama-0.33.2-white?logo=ollama&logoColor=black)](https://hub.docker.com/r/ollama/ollama?tag=0.33.2)
 [![OWASP cdxgen](https://img.shields.io/badge/OWASP_cdxgen-13.0.1-000000?logo=owasp&logoColor=white)](https://github.com/cdxgen/cdxgen/releases/tag/v13.0.1)
 [![OWASP dep-scan](https://img.shields.io/badge/OWASP_dep--scan-6.3.0-E3222D?logo=owasp&logoColor=white)](https://github.com/owasp-dep-scan/dep-scan/releases/tag/v6.3.0)
 [![PyTorch](https://img.shields.io/badge/PyTorch-CUDA_12.1-EE4C2C?logo=pytorch&logoColor=white)](https://github.com/pytorch/pytorch/releases/tag/v2.11.0)
 
+[![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-FFD21E)](https://huggingface.co/)
+[![Ollama](https://img.shields.io/badge/Ollama-0.33.2-white?logo=ollama&logoColor=black)](https://hub.docker.com/r/ollama/ollama?tag=0.33.2)
 [![Alibaba Qwen](https://img.shields.io/badge/Alibaba-Qwen[3.8]-FF6A00?logo=alibabacloud&logoColor=white)](https://huggingface.co/collections/Qwen/qwen38)
 [![Google Gemma](https://img.shields.io/badge/Google-Gemma[4]-4285F4?logo=google&logoColor=white)](https://huggingface.co/collections/google/gemma-4)
 [![IBM Granite](https://img.shields.io/badge/IBM-Granite[4.2]-052FAD?logo=ibm&logoColor=white)](https://huggingface.co/collections/ibm-granite/granite-42-language-models)
@@ -45,9 +46,15 @@ O projeto sustenta-se em 6 pilares fundamentais:
 6. **Atestação Pós-Quântica (PQC):** Motor criptográfico alinhado ao modelo *Zero Trust*, equipado com `liboqs` por meio de *bindings* em Python para assinar e validar envelopes de metadados utilizando **ML-DSA (FIPS 204)**, derivado do projeto *CRYSTALS-Dilithium*, além de suportar encapsulamento de chaves com **ML-KEM (FIPS 203)**, derivado do projeto *CRYSTALS-Kyber*.
 ---
 
-## 🧬 Estrutura do *Pipeline* (As 8 Células)
+## 🧬 Execução e estrutura do *Pipeline* (As 8 Células)
 
-O fluxo operacional deste *runbook* é orquestrado de forma encadeada nas seguintes etapas:
+Para a execução deste *Runbook*, abra o terminal na pasta raiz do projeto e execute os comandos:<br/>
+**(i)** `docker compose up -d` para iniciar o ambiente;<br/>
+**(ii)** `docker logs bomsenso_jupyter` para obter as credenciais de acesso e a URL correspondente.
+> 🛡️ **Nota para Execução em Nuvem (GCP/AWS):** A URL gerada apontará para `127.0.0.1` ou `localhost`. Para acessar a interface de forma segura a partir da sua máquina local, recomenda-se estabelecer um túnel SSH (*Local Port Forwarding*) apontando para a porta `8888` do Jupyter na *Virtual Machine* (VM).
+
+
+O fluxo operacional interno é orquestrado de forma encadeada nas seguintes etapas:
 
 - **CÉLULA 1:** Motor BOMSenso - Roteamento Adaptativo de VRAM *(Detecção de hardware e matriz de roteamento).*
 - **CÉLULA 2:** Provisionamento Unificado via API REST *(Cache e download em endpoints Ollama e Hugging Face).*
